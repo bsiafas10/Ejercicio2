@@ -7,17 +7,17 @@ app.use(express.json());
 
 app.post('/calcular-tasa', (req: Request, res: Response) => {
   try {
-    const { marca, monto } = req.body;
+    const { marca, importe } = req.body;
 
-    if (!marca || !monto) {
-      throw new Error('La solicitud debe incluir la marca de la tarjeta y el monto de la operación.');
+    if (!marca || !importe) {
+      throw new Error('La solicitud debe incluir la marca de la tarjeta y el importe de la operación.');
     }
 
-    const tasa = calcularTasa(marca, parseFloat(monto));
+    const tasa = calcularTasa(marca, parseFloat(importe));
 
-    const valorFinal = "$" + parseFloat(monto) + parseFloat(monto) * (parseFloat(tasa)/100);
+    const importeFinal = "$" + parseFloat(importe) + parseFloat(importe) * (parseFloat(tasa)/100);
     
-    res.json({ tasa, valorFinal });
+    res.json({ tasa, importeFinal });
   } catch (error) {
     if (error instanceof Error) {
       res.status(400).json({ error: error.message });
@@ -31,7 +31,7 @@ app.listen(port, () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);
 });
 
-function calcularTasa(marca: string, monto: number): string {
+function calcularTasa(marca: string, importe: number): string {
   let tasa = 0;
 
   const fechaActual = new Date();
