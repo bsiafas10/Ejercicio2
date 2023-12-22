@@ -1,8 +1,7 @@
-// src/index.ts
 import express, { Request, Response } from 'express';
 
 const app = express();
-const port = process.env.PORT || 3000; // Configuración del puerto
+const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
@@ -15,9 +14,8 @@ app.post('/calcular-tasa', (req: Request, res: Response) => {
     }
 
     const tasa = calcularTasa(marca, parseFloat(monto));
-    const tasaFormateada = tasa.toFixed(2);
-
-    res.json({ tasa: parseFloat(tasaFormateada) });
+    
+    res.json({ tasa });
   } catch (error) {
     if (error instanceof Error) {
       res.status(400).json({ error: error.message });
@@ -31,7 +29,7 @@ app.listen(port, () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);
 });
 
-function calcularTasa(marca: string, monto: number): number {
+function calcularTasa(marca: string, monto: number): string {
   let tasa = 0;
 
   const fechaActual = new Date();
@@ -57,5 +55,5 @@ function calcularTasa(marca: string, monto: number): number {
       throw new Error(`Marca de tarjeta no válida: ${marca}`);
   }
 
-  return monto * (tasa / 100);
+  return tasa.toFixed(2) + "%";
 }
