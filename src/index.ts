@@ -15,7 +15,7 @@ app.post('/calcular-tasa', (req: Request, res: Response) => {
 
     const tasa = calcularTasa(marca, parseFloat(importe));
 
-    const importeFinal = "$" + parseFloat(importe) + parseFloat(importe) * (parseFloat(tasa)/100);
+    const importeFinal = `$${(parseFloat(importe) + parseFloat(importe) * (parseFloat(tasa) / 100)).toFixed(2)}`;
     
     res.json({ tasa, importeFinal });
   } catch (error) {
