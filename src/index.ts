@@ -2,7 +2,7 @@
 import express, { Request, Response } from 'express';
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000; // Configuración del puerto
 
 app.use(express.json());
 
@@ -15,8 +15,9 @@ app.post('/calcular-tasa', (req: Request, res: Response) => {
     }
 
     const tasa = calcularTasa(marca, parseFloat(monto));
+    const tasaFormateada = tasa.toFixed(2);
 
-    res.json({ tasa });
+    res.json({ tasa: parseFloat(tasaFormateada) });
   } catch (error) {
     if (error instanceof Error) {
       res.status(400).json({ error: error.message });
@@ -33,19 +34,28 @@ app.listen(port, () => {
 function calcularTasa(marca: string, monto: number): number {
   let tasa = 0;
 
+  const fechaActual = new Date();
+
   switch (marca.toUpperCase()) {
     case 'VISA':
-      tasa = monto * 0.02;
+      const anioActualVisa = fechaActual.getFullYear() % 100;
+      const mesActualVisa = fechaActual.getMonth() + 1;
+      tasa = Math.max(0.3, Math.min(anioActualVisa / mesActualVisa, 5.0));
       break;
+
     case 'NARA':
-      tasa = monto * 0.015;
+      const diaMesActualNara = fechaActual.getDate();
+      tasa = Math.max(0.3, Math.min(diaMesActualNara * 0.5, 5.0));
       break;
+
     case 'AMEX':
-      tasa = monto * 0.03;
+      const mesActualAmex = fechaActual.getMonth() + 1;
+      tasa = Math.max(0.3, Math.min(mesActualAmex * 0.1, 5.0));
       break;
+
     default:
-      throw new Error('Marca de tarjeta no válida. Las opciones son: VISA, NARA, AMEX.');
+      throw new Error(`Marca de tarjeta no válida: ${marca}`);
   }
 
-  return tasa;
+  return monto * (tasa / 100);
 }
