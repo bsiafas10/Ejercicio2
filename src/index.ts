@@ -15,7 +15,7 @@ app.post('/calcular-tasa', (req: Request, res: Response) => {
 
     const tasa = calcularTasa(marca, parseFloat(monto));
 
-    const valorFinal = parseFloat(monto) + parseFloat(monto) * (parseFloat(tasa)/100);
+    const valorFinal = "$" + parseFloat(monto) + parseFloat(monto) * (parseFloat(tasa)/100);
     
     res.json({ tasa, valorFinal });
   } catch (error) {
