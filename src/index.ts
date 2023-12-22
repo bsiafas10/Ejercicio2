@@ -14,8 +14,10 @@ app.post('/calcular-tasa', (req: Request, res: Response) => {
     }
 
     const tasa = calcularTasa(marca, parseFloat(monto));
+
+    const valorFinal = parseFloat(monto) * (parseFloat(tasa)/100);
     
-    res.json({ tasa });
+    res.json({ tasa, valorFinal });
   } catch (error) {
     if (error instanceof Error) {
       res.status(400).json({ error: error.message });
